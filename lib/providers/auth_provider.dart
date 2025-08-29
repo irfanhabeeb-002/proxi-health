@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:template_project/models/user_model.dart';
-import 'package:template_project/services/firebase_auth_service.dart';
-import 'package:template_project/services/secure_storage_service.dart';
+import 'package:proxi_health/models/user_model.dart';
+import 'package:proxi_health/services/firebase_auth_service.dart';
+import 'package:proxi_health/services/secure_storage_service.dart';
+import 'package:proxi_health/services/firestore_service.dart';
 
 enum AuthState { uninitialized, authenticated, authenticating, unauthenticated }
 
@@ -23,11 +24,13 @@ class AuthProvider with ChangeNotifier {
     _firebaseAuthService.authStateChanges.listen((fbUser) async {
       if (fbUser != null) {
         final token = await _firebaseAuthService.getCurrentUserToken();
+        // Get user role from Firestore
+        final firestoreUser = await FirestoreService.getUser(fbUser.uid);
         _user = User(
           id: fbUser.uid,
-          name: fbUser.displayName ?? 'User',
+          name: fbUser.displayName ?? firestoreUser?.name ?? 'User',
           email: fbUser.email ?? '',
-          role: UserRole.user,
+          role: firestoreUser?.role ?? UserRole.patient,
           token: token,
         );
         if (token != null) {
@@ -46,11 +49,13 @@ class AuthProvider with ChangeNotifier {
     if (_firebaseAuthService.isSignedIn) {
       final fbUser = _firebaseAuthService.currentFirebaseUser!;
       final token = await _firebaseAuthService.getCurrentUserToken();
+      // Get user role from Firestore
+      final firestoreUser = await FirestoreService.getUser(fbUser.uid);
       _user = User(
         id: fbUser.uid,
-        name: fbUser.displayName ?? 'User',
+        name: fbUser.displayName ?? firestoreUser?.name ?? 'User',
         email: fbUser.email ?? '',
-        role: UserRole.user,
+        role: firestoreUser?.role ?? UserRole.patient,
         token: token,
       );
       if (token != null) {

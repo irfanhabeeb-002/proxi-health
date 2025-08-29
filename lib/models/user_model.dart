@@ -1,15 +1,15 @@
-enum UserRole { user, doctor }
+enum UserRole { patient, doctor }
 
 class User {
   final String id;
-  final String name;
+  final String? name;
   final String email;
   final UserRole role;
   final String? token;
 
   User({
     required this.id,
-    required this.name,
+    this.name,
     required this.email,
     required this.role,
     this.token,

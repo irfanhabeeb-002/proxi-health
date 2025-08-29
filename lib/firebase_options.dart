@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -58,5 +55,14 @@ class DefaultFirebaseOptions {
     messagingSenderId: '767339247800',
     projectId: 'proxi-health-app',
     storageBucket: 'proxi-health-app.firebasestorage.app',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyACA3DTkSxpnVVRH2eDC5yoRrarac-dGkw',
+    appId: '1:767339247800:web:42741c3aee1919834fdc4d',
+    messagingSenderId: '767339247800',
+    projectId: 'proxi-health-app',
+    storageBucket: 'proxi-health-app.firebasestorage.app',
+    authDomain: 'proxi-health-app.firebaseapp.com',
   );
 }

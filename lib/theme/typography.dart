@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:template_project/theme/colors.dart';
+import 'package:proxi_health/theme/colors.dart';
 
 class AppTypography {
   static const TextStyle headline1 = TextStyle(

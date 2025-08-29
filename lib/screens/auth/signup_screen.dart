@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:template_project/models/user_model.dart';
-import 'package:template_project/providers/auth_provider.dart';
-
-import 'package:template_project/widgets/app_logo.dart';
-import 'package:template_project/widgets/custom_text_field.dart';
-import 'package:template_project/widgets/primary_button.dart';
-import 'package:template_project/screens/user/user_dashboard_screen.dart';
-import 'package:template_project/screens/doctor/doctor_dashboard_screen.dart';
+import 'package:proxi_health/models/user_model.dart';
+import 'package:proxi_health/services/auth_service.dart';
+import 'package:proxi_health/widgets/proxi_logo.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -17,66 +11,88 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final _nameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  UserRole _selectedRole = UserRole.user;
+  
+  UserRole? _selectedRole;
   bool _isLoading = false;
+  String? _statusMessage;
+  bool _isSuccess = false;
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _signup() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      setState(() => _isLoading = true);
-      
-      try {
-        final authProvider = Provider.of<AuthProvider>(context, listen: false);
-        final success = await authProvider.signup(
-          _nameController.text,
-          _emailController.text,
-          _passwordController.text,
-          _selectedRole,
-        );
-
-        if (success && mounted) {
-          // Navigate based on user role
-          if (authProvider.user?.role == UserRole.user) {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (_) => const UserDashboardScreen()),
-              (route) => false,
-            );
-          } else {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (_) => const DoctorDashboardScreen()),
-              (route) => false,
-            );
-          }
-        }
-      } catch (e) {
-        if (!mounted) return;
-        String message = 'Signup failed. Please try again.';
-        final error = e.toString();
-        if (error.contains('email-already-in-use')) {
-          message = 'An account with this email already exists.';
-        } else if (error.contains('weak-password')) {
-          message = 'The password provided is too weak.';
-        } else if (error.contains('invalid-email')) {
-          message = 'The email address is not valid.';
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message), backgroundColor: Colors.red),
-        );
-      } finally {
-        if (mounted) setState(() => _isLoading = false);
-      }
+  Future<void> _handleSignup() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
+
+    if (_selectedRole == null) {
+      setState(() {
+        _statusMessage = 'Please select your role';
+        _isSuccess = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _statusMessage = null;
+    });
+
+    try {
+      final result = await AuthService.signUpWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        role: _selectedRole!,
+      );
+
+      setState(() {
+        _isLoading = false;
+        if (result.success) {
+          _statusMessage = 'Account created successfully! Welcome to Proxi Health.';
+          _isSuccess = true;
+          // Clear form on success
+          _emailController.clear();
+          _passwordController.clear();
+          _selectedRole = null;
+        } else {
+          _statusMessage = result.safeErrorMessage;
+          _isSuccess = false;
+        }
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _statusMessage = 'An unexpected error occurred. Please try again.';
+        _isSuccess = false;
+      });
+    }
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    if (!AuthService.isValidEmail(value)) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (!AuthService.isValidPassword(value)) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
   }
 
   @override
@@ -84,86 +100,180 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Account'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const AppLogo(size: 40),
-                  const SizedBox(height: 30),
-                  CustomTextField(
-                    controller: _nameController,
-                    labelText: 'Full Name',
-                    icon: Icons.person,
-                    validator: (value) => (value?.isEmpty ?? true) ? 'Enter your name' : null,
-                  ),
-                  const SizedBox(height: 20),
-                  CustomTextField(
-                    controller: _emailController,
-                    labelText: 'Email',
-                    icon: Icons.email,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) => (value?.isEmpty ?? true) ? 'Enter an email' : null,
-                  ),
-                  const SizedBox(height: 20),
-                  CustomTextField(
-                    controller: _passwordController,
-                    labelText: 'Password',
-                    icon: Icons.lock,
-                    isPassword: true,
-                    validator: (value) => (value?.length ?? 0) < 6 ? 'Password must be 6+ chars' : null,
-                  ),
-                  const SizedBox(height: 20),
-                  _buildRoleSelector(),
-                  const SizedBox(height: 30),
-                  PrimaryButton(
-                    text: 'Sign Up',
-                    onPressed: _signup,
-                    isLoading: _isLoading,
-                  ),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const ProxiLogo(size: 80),
+              const SizedBox(height: 24),
+              Text(
+                'Create Your Account',
+                style: Theme.of(context).textTheme.headlineMedium,
+                textAlign: TextAlign.center,
               ),
-            ),
+              const SizedBox(height: 32),
+              
+              // Email field
+              TextFormField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email),
+                ),
+                validator: _validateEmail,
+                enabled: !_isLoading,
+              ),
+              const SizedBox(height: 16),
+              
+              // Password field
+              TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.lock),
+                  helperText: 'Minimum 6 characters',
+                ),
+                validator: _validatePassword,
+                enabled: !_isLoading,
+              ),
+              const SizedBox(height: 24),
+              
+              // Role selection
+              const Text(
+                'Select your role:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 8),
+              
+              // Patient radio button
+              RadioListTile<UserRole>(
+                title: const Text('Patient'),
+                subtitle: const Text('I want to track my health data'),
+                value: UserRole.patient,
+                groupValue: _selectedRole,
+                onChanged: _isLoading ? null : (UserRole? value) {
+                  setState(() {
+                    _selectedRole = value;
+                    _statusMessage = null; // Clear any role selection error
+                  });
+                },
+              ),
+              
+              // Doctor radio button
+              RadioListTile<UserRole>(
+                title: const Text('Doctor'),
+                subtitle: const Text('I want to monitor patients'),
+                value: UserRole.doctor,
+                groupValue: _selectedRole,
+                onChanged: _isLoading ? null : (UserRole? value) {
+                  setState(() {
+                    _selectedRole = value;
+                    _statusMessage = null; // Clear any role selection error
+                  });
+                },
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // Signup button
+              ElevatedButton(
+                onPressed: _isLoading ? null : _handleSignup,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: _isLoading
+                    ? const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          ),
+                          SizedBox(width: 12),
+                          Text('Creating Account...'),
+                        ],
+                      )
+                    : const Text(
+                        'Create Account',
+                        style: TextStyle(fontSize: 16),
+                      ),
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // Status message
+              if (_statusMessage != null)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: _isSuccess ? Colors.green[50] : Colors.red[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: _isSuccess ? Colors.green : Colors.red,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _isSuccess ? Icons.check_circle : Icons.error,
+                        color: _isSuccess ? Colors.green : Colors.red,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          _statusMessage!,
+                          style: TextStyle(
+                            color: _isSuccess ? Colors.green[800] : Colors.red[800],
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              
+              const SizedBox(height: 24),
+              
+              // Instructions
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Getting Started:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      '1. Enter your email and create a secure password\n'
+                      '2. Choose your role (Patient or Doctor)\n'
+                      '3. Click "Create Account" to get started\n'
+                      '4. Your account will be ready to use immediately',
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildRoleSelector() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('I am a:', style: TextStyle(fontSize: 16)),
-        Row(
-          children: [
-            Radio<UserRole>(
-              value: UserRole.user,
-              groupValue: _selectedRole,
-              onChanged: (UserRole? value) {
-                if (value != null) setState(() => _selectedRole = value);
-              },
-            ),
-            const Text('User / Patient'),
-            Radio<UserRole>(
-              value: UserRole.doctor,
-              groupValue: _selectedRole,
-              onChanged: (UserRole? value) {
-                if (value != null) setState(() => _selectedRole = value);
-              },
-            ),
-            const Text('Doctor'),
-          ],
-        ),
-      ],
     );
   }
 }

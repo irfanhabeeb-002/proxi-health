@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:template_project/models/patient_overview_model.dart';
-import 'package:template_project/providers/auth_provider.dart';
-import 'package:template_project/services/api_service.dart';
-import 'package:template_project/theme/colors.dart';
-import 'package:template_project/theme/typography.dart';
+import 'package:proxi_health/models/patient_overview_model.dart';
+import 'package:proxi_health/providers/auth_provider.dart';
+import 'package:proxi_health/services/api_service.dart';
+import 'package:proxi_health/theme/colors.dart';
+import 'package:proxi_health/theme/typography.dart';
 
 class DoctorDashboardScreen extends StatefulWidget {
   const DoctorDashboardScreen({super.key});

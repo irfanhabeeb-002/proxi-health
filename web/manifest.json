@@ -1,6 +1,6 @@
 {
-    "name": "template_project",
-    "short_name": "template_project",
+    "name": "proxi_health",
+    "short_name": "proxi_health",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:template_project/models/user_model.dart';
-import 'package:template_project/models/health_data_model.dart';
-import 'package:template_project/models/patient_overview_model.dart';
+import 'package:proxi_health/models/user_model.dart';
+import 'package:proxi_health/models/health_data_model.dart';
+import 'package:proxi_health/models/patient_overview_model.dart';
 
 class ApiService {
   final String _baseUrl = 'https://api.proxi-health.com'; // Placeholder
@@ -19,7 +19,7 @@ class ApiService {
     
     // Mock response
     if (email == 'user@proxi.com') {
-      return User(id: 'user1', name: 'John Doe', email: email, role: UserRole.user, token: 'fake-jwt-token');
+      return User(id: 'user1', name: 'John Doe', email: email, role: UserRole.patient, token: 'fake-jwt-token');
     }
     if (email == 'doctor@proxi.com') {
       return User(id: 'doc1', name: 'Dr. Smith', email: email, role: UserRole.doctor, token: 'fake-jwt-token');

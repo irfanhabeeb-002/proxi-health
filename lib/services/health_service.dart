@@ -1,4 +1,4 @@
-import 'package:template_project/models/health_data_model.dart';
+import 'package:proxi_health/models/health_data_model.dart';
 
 class HealthService {
   // In a real app, this would use plugins like health or health_kit

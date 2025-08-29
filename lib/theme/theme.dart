@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:template_project/theme/colors.dart';
-import 'package:template_project/theme/typography.dart';
+import 'package:proxi_health/theme/colors.dart';
+import 'package:proxi_health/theme/typography.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {

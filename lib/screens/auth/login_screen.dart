@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:template_project/providers/auth_provider.dart';
-import 'package:template_project/widgets/app_logo.dart';
-import 'package:template_project/widgets/custom_text_field.dart';
-import 'package:template_project/widgets/primary_button.dart';
-import 'package:template_project/screens/auth/signup_screen.dart';
-import 'package:template_project/screens/user/user_dashboard_screen.dart';
-import 'package:template_project/screens/doctor/doctor_dashboard_screen.dart';
-import 'package:template_project/models/user_model.dart';
+import 'package:proxi_health/providers/auth_provider.dart';
+import 'package:proxi_health/widgets/app_logo.dart';
+import 'package:proxi_health/widgets/custom_text_field.dart';
+import 'package:proxi_health/widgets/primary_button.dart';
+import 'package:proxi_health/screens/auth/signup_screen.dart';
+import 'package:proxi_health/screens/user/user_dashboard_screen.dart';
+import 'package:proxi_health/screens/doctor/doctor_dashboard_screen.dart';
+import 'package:proxi_health/models/user_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         if (success && mounted) {
-          if (authProvider.user?.role == UserRole.user) {
+          if (authProvider.user?.role == UserRole.patient) {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => const UserDashboardScreen()),
             );

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:community_charts_flutter/community_charts_flutter.dart' as charts;
-import 'package:template_project/models/health_data_model.dart';
-import 'package:template_project/models/patient_overview_model.dart';
-import 'package:template_project/providers/auth_provider.dart';
-import 'package:template_project/services/api_service.dart';
-import 'package:template_project/services/location_service.dart';
-import 'package:template_project/theme/colors.dart';
-import 'package:template_project/theme/typography.dart';
+import 'package:proxi_health/models/health_data_model.dart';
+import 'package:proxi_health/models/patient_overview_model.dart';
+import 'package:proxi_health/providers/auth_provider.dart';
+import 'package:proxi_health/services/api_service.dart';
+import 'package:proxi_health/services/location_service.dart';
+import 'package:proxi_health/theme/colors.dart';
+import 'package:proxi_health/theme/typography.dart';
+import 'package:proxi_health/screens/test/firestore_test_screen.dart';
 
 class UserDashboardScreen extends StatefulWidget {
   const UserDashboardScreen({super.key});
@@ -66,6 +67,8 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Welcome, ${user?.name ?? 'User'}!', style: AppTypography.headline1),
+            const SizedBox(height: 20),
+            _buildFirestoreTestButton(),
             const SizedBox(height: 20),
             _buildRiskCard(),
             const SizedBox(height: 20),
@@ -253,6 +256,45 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                   },
                 );
               },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFirestoreTestButton() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Firestore Test',
+              style: AppTypography.headline3,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Test Cloud Firestore integration',
+              style: AppTypography.bodyText2.copyWith(
+                color: AppColors.textLight,
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const FirestoreTestScreen(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Open Firestore Test'),
             ),
           ],
         ),

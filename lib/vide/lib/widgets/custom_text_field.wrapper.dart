@@ -1,5 +1,5 @@
 import 'package:vide/widget_prototype.dart';
-import 'package:template_project/widgets/custom_text_field.dart';
+import 'package:proxi_health/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:vide/features/canvas/widgets/mobile_scroll_behavior.dart';
 

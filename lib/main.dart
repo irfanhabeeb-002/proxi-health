@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:template_project/providers/auth_provider.dart';
+import 'package:proxi_health/providers/auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart'; // ⬅️ ADD THIS
-import 'package:template_project/services/firebase_auth_service.dart';
-import 'package:template_project/screens/auth/login_screen.dart';
-import 'package:template_project/screens/doctor/doctor_dashboard_screen.dart';
-import 'package:template_project/screens/user/user_dashboard_screen.dart';
-import 'package:template_project/services/api_service.dart';
-import 'package:template_project/services/secure_storage_service.dart';
-import 'package:template_project/theme/theme.dart';
-import 'package:template_project/models/user_model.dart';
+import 'package:proxi_health/services/firebase_auth_service.dart';
+import 'package:proxi_health/screens/auth/login_screen.dart';
+import 'package:proxi_health/screens/doctor/doctor_dashboard_screen.dart';
+import 'package:proxi_health/screens/user/user_dashboard_screen.dart';
+import 'package:proxi_health/services/api_service.dart';
+import 'package:proxi_health/services/secure_storage_service.dart';
+import 'package:proxi_health/theme/theme.dart';
+import 'package:proxi_health/models/user_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,7 +64,7 @@ class AuthWrapper extends StatelessWidget {
 
     switch (authProvider.authState) {
       case AuthState.authenticated:
-        if (authProvider.user?.role == UserRole.user) {
+        if (authProvider.user?.role == UserRole.patient) {
           return const UserDashboardScreen();
         } else {
           return const DoctorDashboardScreen();

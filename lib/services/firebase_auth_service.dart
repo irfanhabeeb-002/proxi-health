@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
-import 'package:template_project/models/user_model.dart';
+import 'package:proxi_health/models/user_model.dart';
+import 'package:proxi_health/services/firestore_service.dart';
 
 class FirebaseAuthService {
   final fb.FirebaseAuth _auth;
@@ -14,11 +15,15 @@ class FirebaseAuthService {
     final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
     final fb.User user = credential.user!;
     final idToken = await user.getIdToken();
+    
+    // Get user role from Firestore
+    final firestoreUser = await FirestoreService.getUser(user.uid);
+    
     return User(
       id: user.uid,
-      name: user.displayName ?? 'User',
+      name: user.displayName ?? firestoreUser?.name ?? 'User',
       email: user.email ?? email,
-      role: UserRole.user,
+      role: firestoreUser?.role ?? UserRole.patient, // Use role from Firestore
       token: idToken,
     );
   }
@@ -31,11 +36,20 @@ class FirebaseAuthService {
   }) async {
     final credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     final fb.User user = credential.user!;
+    
     // Update display name
     await user.updateDisplayName(name);
     await user.reload();
     final refreshed = _auth.currentUser!;
     final idToken = await refreshed.getIdToken();
+    
+    // Create Firestore user document with the selected role
+    await FirestoreService.createUserDocumentIfNotExists(
+      uid: refreshed.uid,
+      email: email,
+      role: role,
+    );
+    
     return User(
       id: refreshed.uid,
       name: refreshed.displayName ?? name,
