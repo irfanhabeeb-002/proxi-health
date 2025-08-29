@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proxi_health/providers/auth_provider.dart';
-import 'package:proxi_health/widgets/app_logo.dart';
+import 'package:proxi_health/widgets/proxi_logo.dart';
 import 'package:proxi_health/widgets/custom_text_field.dart';
 import 'package:proxi_health/widgets/primary_button.dart';
 import 'package:proxi_health/screens/auth/signup_screen.dart';
@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const AppLogo(size: 60),
+                  const ProxiLogo(width: 80, height: 80),
                   const SizedBox(height: 40),
                   CustomTextField(
                     controller: _emailController,

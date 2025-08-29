@@ -108,7 +108,7 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const ProxiLogo(size: 80),
+              const ProxiLogo(width: 80, height: 80),
               const SizedBox(height: 24),
               Text(
                 'Create Your Account',

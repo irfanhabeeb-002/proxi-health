@@ -1,115 +1,105 @@
 import 'package:flutter/material.dart';
+import '../utils/logo_assets.dart';
 
+/// A reusable widget that displays the Proxi Health logo
+/// 
+/// This widget provides consistent logo display across the application
+/// with configurable sizing and styling options.
 class ProxiLogo extends StatelessWidget {
-  final double size;
-  final bool showText;
-  final Color? primaryColor;
-  final Color? secondaryColor;
+  /// Width of the logo. If null, uses intrinsic width
+  final double? width;
+  
+  /// Height of the logo. If null, uses intrinsic height
+  final double? height;
+  
+  /// How the logo should be inscribed into the available space
+  final BoxFit fit;
+  
+  /// Color filter to apply to the logo (for tinted versions)
+  final Color? color;
+  
+  /// Semantic label for accessibility
+  final String? semanticLabel;
 
   const ProxiLogo({
     super.key,
-    this.size = 60,
-    this.showText = true,
-    this.primaryColor,
-    this.secondaryColor,
+    this.width,
+    this.height,
+    this.fit = BoxFit.contain,
+    this.color,
+    this.semanticLabel,
   });
+
+  /// Creates a small-sized logo (32px)
+  const ProxiLogo.small({
+    super.key,
+    this.fit = BoxFit.contain,
+    this.color,
+    this.semanticLabel,
+  }) : width = LogoConfig.smallSize,
+       height = LogoConfig.smallSize;
+
+  /// Creates a medium-sized logo (64px)
+  const ProxiLogo.medium({
+    super.key,
+    this.fit = BoxFit.contain,
+    this.color,
+    this.semanticLabel,
+  }) : width = LogoConfig.mediumSize,
+       height = LogoConfig.mediumSize;
+
+  /// Creates a large-sized logo (128px)
+  const ProxiLogo.large({
+    super.key,
+    this.fit = BoxFit.contain,
+    this.color,
+    this.semanticLabel,
+  }) : width = LogoConfig.largeSize,
+       height = LogoConfig.largeSize;
+
+  /// Creates a splash screen-sized logo (200px)
+  const ProxiLogo.splash({
+    super.key,
+    this.fit = BoxFit.contain,
+    this.color,
+    this.semanticLabel,
+  }) : width = LogoConfig.splashSize,
+       height = LogoConfig.splashSize;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final primary = primaryColor ?? const Color(0xFF1E3A8A);
-    final secondary = secondaryColor ?? const Color(0xFF06B6D4);
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Logo Icon
-        Container(
-          width: size,
-          height: size,
+    Widget logoImage = Image.asset(
+      LogoAssets.primaryLogo,
+      width: width,
+      height: height,
+      fit: fit,
+      semanticLabel: semanticLabel ?? 'Proxi Health Logo',
+      errorBuilder: (context, error, stackTrace) {
+        // Fallback widget if logo asset fails to load
+        return Container(
+          width: width ?? 64,
+          height: height ?? 64,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(size * 0.2),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color(0xFF1A2332),
-                primary,
-                secondary,
-              ],
-            ),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
           ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Heart shape made of two circles
-              Positioned(
-                left: size * 0.2,
-                top: size * 0.25,
-                child: Container(
-                  width: size * 0.35,
-                  height: size * 0.35,
-                  decoration: BoxDecoration(
-                    color: primary,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-              Positioned(
-                right: size * 0.2,
-                top: size * 0.25,
-                child: Container(
-                  width: size * 0.35,
-                  height: size * 0.35,
-                  decoration: BoxDecoration(
-                    color: secondary,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-              // Bottom part of heart
-              Positioned(
-                bottom: size * 0.2,
-                child: Container(
-                  width: size * 0.3,
-                  height: size * 0.3,
-                  decoration: BoxDecoration(
-                    color: secondary,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(size * 0.15),
-                      bottomRight: Radius.circular(size * 0.15),
-                    ),
-                  ),
-                ),
-              ),
-              // Plus sign overlay
-              Container(
-                width: size * 0.4,
-                height: size * 0.4,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: size * 0.25,
-                ),
-              ),
-            ],
+          child: Icon(
+            Icons.health_and_safety,
+            size: (width ?? 64) * 0.6,
+            color: Theme.of(context).primaryColor,
           ),
-        ),
-        if (showText) ...[
-          SizedBox(height: size * 0.2),
-          Text(
-            'PROXI HEALTH',
-            style: TextStyle(
-              fontSize: size * 0.25,
-              fontWeight: FontWeight.bold,
-              color: theme.brightness == Brightness.dark 
-                  ? Colors.white 
-                  : const Color(0xFF1E293B),
-              letterSpacing: 1.2,
-            ),
-          ),
-        ],
-      ],
+        );
+      },
     );
+
+    // Apply color filter if specified
+    if (color != null) {
+      logoImage = ColorFiltered(
+        colorFilter: ColorFilter.mode(color!, BlendMode.srcIn),
+        child: logoImage,
+      );
+    }
+
+    return logoImage;
   }
 }

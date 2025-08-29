@@ -5,6 +5,7 @@ import 'package:proxi_health/providers/auth_provider.dart';
 import 'package:proxi_health/services/api_service.dart';
 import 'package:proxi_health/theme/colors.dart';
 import 'package:proxi_health/theme/typography.dart';
+import 'package:proxi_health/widgets/proxi_logo.dart';
 
 class DoctorDashboardScreen extends StatefulWidget {
   const DoctorDashboardScreen({super.key});
@@ -32,7 +33,13 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Patient Dashboard'),
+        title: Row(
+          children: [
+            const ProxiLogo.small(),
+            const SizedBox(width: 12),
+            const Text('Patient Dashboard'),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),

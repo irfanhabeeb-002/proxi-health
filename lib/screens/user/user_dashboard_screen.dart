@@ -9,6 +9,7 @@ import 'package:proxi_health/services/location_service.dart';
 import 'package:proxi_health/theme/colors.dart';
 import 'package:proxi_health/theme/typography.dart';
 import 'package:proxi_health/screens/test/firestore_test_screen.dart';
+import 'package:proxi_health/widgets/proxi_logo.dart';
 
 class UserDashboardScreen extends StatefulWidget {
   const UserDashboardScreen({super.key});
@@ -50,7 +51,13 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Health Dashboard'),
+        title: Row(
+          children: [
+            const ProxiLogo.small(),
+            const SizedBox(width: 12),
+            const Text('My Health Dashboard'),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),

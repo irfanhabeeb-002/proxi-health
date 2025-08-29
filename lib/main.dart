@@ -11,6 +11,7 @@ import 'package:proxi_health/services/api_service.dart';
 import 'package:proxi_health/services/secure_storage_service.dart';
 import 'package:proxi_health/theme/theme.dart';
 import 'package:proxi_health/models/user_model.dart';
+import 'package:proxi_health/widgets/proxi_logo.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,7 +77,19 @@ class AuthWrapper extends StatelessWidget {
       default:
         return const Scaffold(
           body: Center(
-            child: CircularProgressIndicator(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ProxiLogo.large(),
+                SizedBox(height: 32),
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text(
+                  'Loading...',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
           ),
         );
     }

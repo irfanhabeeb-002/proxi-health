@@ -5,6 +5,7 @@ import 'package:proxi_health/models/user_model.dart';
 import 'package:proxi_health/theme/colors.dart';
 import 'package:proxi_health/theme/typography.dart';
 import 'package:proxi_health/widgets/primary_button.dart';
+import 'package:proxi_health/widgets/proxi_logo.dart';
 
 class FirestoreTestScreen extends StatefulWidget {
   const FirestoreTestScreen({super.key});
@@ -122,11 +123,17 @@ class _FirestoreTestScreenState extends State<FirestoreTestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Firestore Test',
-          style: AppTypography.headline3.copyWith(
-            color: AppColors.textDark,
-          ),
+        title: Row(
+          children: [
+            const ProxiLogo.small(),
+            const SizedBox(width: 12),
+            Text(
+              'Firestore Test',
+              style: AppTypography.headline3.copyWith(
+                color: AppColors.textDark,
+              ),
+            ),
+          ],
         ),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
