@@ -1,0 +1,70 @@
+# --------------------------
+# OS / Editor junk
+# --------------------------
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.pyc
+.atom/
+.history
+.svn/
+
+# IntelliJ / Android Studio
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code (uncomment if you don’t want to share settings)
+.vscode/
+
+# Swift / iOS related
+.swiftpm/
+migrate_working_dir/
+
+# --------------------------
+# Flutter / Dart
+# --------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
+# Build outputs
+/build/
+/ios/Pods/
+/android/.gradle/
+/android/local.properties
+
+# --------------------------
+# Android build artifacts
+# --------------------------
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# --------------------------
+# Sensitive files
+# --------------------------
+**/google-services.json
+**/GoogleService-Info.plist
+*.keystore
+*.jks
+
+# --------------------------
+# Keep example configs (safe for GitHub)
+# --------------------------
+!**/google-services.example.json
+!**/GoogleService-Info.example.plist
+
+# --------------------------
+# Others
+# --------------------------
+app.*.symbols
+app.*.map.json
+pubspec_overrides.yaml
