@@ -49,12 +49,27 @@ migrate_working_dir/
 /android/app/release
 
 # --------------------------
-# Sensitive files
+# Sensitive files - Firebase & Authentication
 # --------------------------
 **/google-services.json
 **/GoogleService-Info.plist
+lib/firebase_options.dart
+firebase.json
 *.keystore
 *.jks
+
+# Environment variables and secrets
+.env
+.env.local
+.env.production
+.env.staging
+**/.env
+**/.env.*
+
+# API keys and configuration
+**/config/keys.dart
+**/config/secrets.dart
+**/lib/config/api_keys.dart
 
 # --------------------------
 # Keep example configs (safe for GitHub)

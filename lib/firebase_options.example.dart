@@ -14,6 +14,10 @@ import 'package:flutter/foundation.dart'
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
+/// 
+/// SECURITY NOTE: This is a template file. Copy this to firebase_options.dart
+/// and replace the placeholder values with your actual Firebase configuration.
+/// Never commit the actual firebase_options.dart file to version control.
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -50,19 +54,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyACA3DTkSxpnVVRH2eDC5yoRrarac-dGkw',
-    appId: '1:767339247800:android:42741c3aee1919834fdc4d',
-    messagingSenderId: '767339247800',
-    projectId: 'proxi-health-app',
-    storageBucket: 'proxi-health-app.firebasestorage.app',
+    apiKey: 'YOUR_ANDROID_API_KEY_HERE',
+    appId: 'YOUR_ANDROID_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    storageBucket: 'YOUR_STORAGE_BUCKET_HERE',
   );
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyACA3DTkSxpnVVRH2eDC5yoRrarac-dGkw',
-    appId: '1:767339247800:web:42741c3aee1919834fdc4d',
-    messagingSenderId: '767339247800',
-    projectId: 'proxi-health-app',
-    storageBucket: 'proxi-health-app.firebasestorage.app',
-    authDomain: 'proxi-health-app.firebaseapp.com',
+    apiKey: 'YOUR_WEB_API_KEY_HERE',
+    appId: 'YOUR_WEB_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    storageBucket: 'YOUR_STORAGE_BUCKET_HERE',
+    authDomain: 'YOUR_AUTH_DOMAIN_HERE',
   );
 }
